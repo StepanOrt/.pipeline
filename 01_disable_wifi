@@ -1,0 +1,34 @@
+#!/bin/bash
+
+cat << EOF
+== $0: Pipeline to disable wifi and bluetooth ==
+EOF
+
+function file_contains() {
+    grep $2 $1 > /dev/null
+    return
+}
+
+function sudo_append() {
+sudo tee -a "$1" > /dev/null << EOF
+$2
+EOF
+}
+
+if ! file_contains /boot/config.txt dtoverlay=disable-wifi; then
+    echo "disabling wifi"
+    sudo_append /boot/config.txt dtoverlay=disable-wifi
+else
+    echo "wifi already disabled"
+fi
+
+if ! file_contains /boot/config.txt dtoverlay=disable-bt; then
+    echo "disabling bluetooth"
+    sudo_append /boot/config.txt dtoverlay=disable-bt
+else
+    echo "bluetooth already disabled"
+fi
+
+cat << EOF
+== $0: Finished                               ==
+EOF

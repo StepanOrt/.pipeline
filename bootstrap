@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "${1}" == "exec" ]; then
+    for file in $(ls | sort); do
+        if [ "${file}" != "${0}" ] && [ "${file}" != "README.md" ] && [ "${file}" != "LICENSE" ]; then
+            CURRENT_MD5=$(md5sum -z "${file}" | head -c 32)
+            if [ -f ".${file}.latest" ]; then
+                LATEST_MD5=$(cat ".${file}.latest")
+                if [ "$CURRENT_MD5" == "$LATEST_MD5" ]; then
+                    echo "${file} already executed"
+                    continue
+                fi
+            fi
+            bash ${file}
+            echo -n $CURRENT_MD5 > ".${file}.latest"
+        fi
+    done
+else
+   git pull && bash ${0} exec
+fi

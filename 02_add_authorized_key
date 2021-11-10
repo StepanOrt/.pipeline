@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cat << EOF
+== $0: Add authorized key ==
+EOF
+
+PUB_KEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP+OdzmUmqlJl7SGYq3MiURsfIoYVPHE3tY+D6a+ELDD"
+KEY_NAME="${USER}@$(cat /etc/hostname)"
+AUTHORIZED_KEYS="$HOME/.ssh/authorized_keys"
+
+if grep -q "$PUB_KEY" "$AUTHORIZED_KEYS" 2>/dev/null; then
+    echo "Public key is already authorized key"
+else
+    echo "Adding authorized key"
+    echo "$PUB_KEY $KEY_NAME" >> "$AUTHORIZED_KEYS"
+fi
+chmod 600 "$AUTHORIZED_KEYS"
+
+cat << EOF
+== $0: Finished           ==
+EOF
