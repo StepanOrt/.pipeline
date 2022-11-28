@@ -12,6 +12,9 @@ if [ "${1}" == "exec" ]; then
                 fi
             fi
             bash ${file}
+            if [ "$?" != "0" ]; then
+                exit 1
+            fi
             echo -n $CURRENT_MD5 > ".${file}.latest"
         fi
     done

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+cat << EOF
+== $0: Install Docker ==
+EOF
+
+which docker > /dev/null
+if [ "$?" != "0" ]; then
+   sudo apt update && sudo apt upgrade -y
+   curl -sSL https://get.docker.com  -o /tmp/get-docker.sh && \
+   sudo sh /tmp/get-docker.sh && \
+   rm /tmp/get-docker.sh
+fi
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+docker run hello-world
+if [ "$?" != "0" ]; then
+    echo "Re-login required"
+    exit 1
+fi
+
+cat << EOF
+== $0: Finished ==
+EOF
+
